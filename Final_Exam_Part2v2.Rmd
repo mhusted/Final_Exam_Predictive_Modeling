@@ -2,8 +2,19 @@
 title: "Final Exam STA380"
 author: "MacAlistair Husted(MWH2359)"
 date: "8/17/2020"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
+# Table of Contents
+*	Question 1  Pgs. 1-9
+*	Question 2  Pgs. 10-22
+*	Question 3  Pgs. 22-60
+*	Question 4 Pgs. 60-77
+*	Question 5 Pgs. 77-364
+*	Question 6 Pgs. 364-404
+
+
 # Question 1
 
   Before conducting any analysis, I first cleaned the data. The procedure was quite similar to the stat guru’s besides ensuring that there were no missing data in any of the columns by omitting NAs. 
@@ -963,6 +974,7 @@ High…
 *	Beauty
 *	Cooking
 *	Fashion
+Low...
 *	Chatter
 *	Shopping 
 
@@ -980,6 +992,7 @@ High…
 *	Automotive
 *	News
 *	Tv film 
+Low...
 *	Computers 
 *	Travel
 
@@ -1082,12 +1095,13 @@ ggplot(loadings) +
   coord_flip()
 ```
 
+
 # Question 5
 
-  The dataset used was the training and test datasets from C50 Reuters. Prior to converting the documents into a corpus, I had to read it in using a readerPlain function. Once this task was completed, I converted all the documents from all the authors into corpus then cleaned the corpus to remove extra white space, punctuation, and numbers. Along with that I also removed any English stop words that were used in the document. I then converted my corpus for each of the authors into a document term matrix. Once I had all 50 document matrices, I removed any words that didn’t appear in 95% of all 50 documents which improved the overall sparsity for each of my 50 document term matrices. I then calculated the TF IDF for each of the author’s document term matrices. I did this for both the training dataset and the test dataset training. The only slight difference between the procedure for the test dataset was that I removed the words from the test dataset that were not present on the training set before training my model.  
+  The dataset used was the training and test datasets from C50 Reuters. Prior to converting the documents into a corpus, I had to read it in using a readerPlain function. Once this task was completed, I converted all the documents from all the authors into corpus then cleaned the corpus to remove extra white space, punctuation, and numbers. Along with that I also removed any English stop words that were used in the document. I then converted my corpus for each of the authors into a document term matrix. Once I had all 50 document matrices, I removed any words that didn’t appear in 95% of all 50 documents which improved the overall sparsity for each of my 50 document term matrices. I then calculated the TF IDF for each of the author’s document term matrices. I then transposed the TF IDF matrices for each author so the matrix had the words as rows and the documents as columns.I did this for both the training dataset and the test dataset training. The only slight difference between the procedure for the test dataset was that I removed the words from the test dataset that were not present on the training set before training my model.  
   Once most of my preprocessing was completed, I continued with training my model. To train my model, I used the TF IDF of every author’s document term matrix from the training dataset. I used a decision tree model using the rpart algorithm to train my model. Once I had the model, I then predicted my results using model and the TF IDF from the test dataset. Lastly, I calculated the accuracy. I did not continue to optimize my model since my out of sample accuracy was 99% which is extremely close to what I would’ve gotten for the in-sample accuracy. 
   
-```{r chunk-a, message=FALSE,warning = FALSE}
+```{r chunk-a, message=FALSE,warning = FALSE, include=FALSE}
 library(tm) 
 library(tidyverse)
 library(slam)
@@ -2423,7 +2437,7 @@ DTM_kirstin2 <- as.data.frame(as.matrix(DTM_kirstin ), stringsAsFactors=False)
 
 ```
 
-```{r chunk-b, message=FALSE,warning = FALSE, ref.label= 'chunk-a'}
+```{r chunk-b, message=FALSE,warning = FALSE, include = FALSE, ref.label= 'chunk-a'}
 ### Next Author
 
 file_listAl = Sys.glob(p('C:/Users/machu/OneDrive/Documents/GitHub/STA380/data/ReutersC50/C50train/',KouroshKarimkhany,'/*.txt'))
@@ -3618,7 +3632,7 @@ DTM_todd2 <- as.data.frame(as.matrix(DTM_todd ), stringsAsFactors=False)
 ```
 
 
-```{r chunk-c, message=FALSE, warning = FALSE, ref.label= c('chunk-a,chunk-b')}
+```{r chunk-c, message=FALSE, warning = FALSE, incude = FALSE, ref.label= c('chunk-a,chunk-b')}
 
 library(e1071)
 
@@ -4602,7 +4616,7 @@ jim_DF_test <- jim_DF_test[, !colnames(jim_DF_test) %in% remove_jim]
 
 
 
-```{r chunk-d, message=FALSE, warning = FALSE, ref.label= c('chunk-a,chunk-b','chunk-c')}
+```{r chunk-d, message=FALSE, warning = FALSE, include = FALSE, ref.label= c('chunk-a,chunk-b','chunk-c')}
 ### Next Author
 
 file_list_test = Sys.glob(p('C:/Users/machu/OneDrive/Documents/GitHub/STA380/data/ReutersC50/C50test/',JoWinterbottom,'/*.txt'))
@@ -6478,10 +6492,10 @@ will_words  <- names(will_DF)
 will_words_test  <- names(will_DF_test)
 remove_will <- will_words_test[!(will_words_test %in% will_words)]
 will_DF_test <- will_DF_test[, !colnames(will_DF_test) %in% remove_will]
+
 ```
 
-
-```{r chunk-e, message=FALSE, warning = FALSE, ref.label= c('chunk-a',chunk-b','chunk-c','chunk-d')}
+```{r chunk-e,message=FALSE,warning = FALSE, echo=FALSE, ref.label= c('chunk-a','chunk-b','chunk-c', 'chunk-d')}
 transpose_simon <- as.data.frame(t(simon_DF))
 transpose_simon$Author <- SimonCowell
 
@@ -6796,8 +6810,11 @@ accuracyCART<-(100-mean(c((nrow(test3)-sum(diag(MisClassTest)))/nrow(test3)),(nr
 accuracyCART
 ```
 
-
-
+---
+output:
+  word_document: default
+  html_document: default
+---
 # Question 6
 
 First, I took a look at the most frequent items to ground myself in the data. It also helped in downstream analysis when analyzing the association rules of basket items. As you can see, whole milk is predominately purchased the most in the dataset of basket items. 
@@ -6833,7 +6850,6 @@ mbaskets <- na.omit(mbaskets)
 baskets1= split(x=mbaskets$value, f=mbaskets$Baskets)
 baskets = lapply(baskets1, unique)
 baskettrans = as(baskets, "transactions")
-summary(baskettrans)
 require("RColorBrewer")
 itemFrequencyPlot(baskettrans,topN=20,type="absolute",col=brewer.pal(8,'Pastel2'), main="Absolute Item Frequency Plot")
 
@@ -6841,7 +6857,6 @@ itemFrequencyPlot(baskettrans,topN=20,type="absolute",col=brewer.pal(8,'Pastel2'
 ```
 
   Prior to running the apriori algorithm, I wanted some way to determine which thresholds I should as parameters in the algorithm. I figured out away to plot the number of rules by confidence level at different support levels. Based on the plot, I determine that the thresholds should be .005 and .2 as this would provide me with enough rules to analyze. In addition, I also found that that the lift is negatively effected as you increase the support and confidence level. 
-
 ```{r message=FALSE,warning = FALSE}
 
 library(dplyr)
@@ -6874,7 +6889,6 @@ mbaskets <- na.omit(mbaskets)
 baskets1= split(x=mbaskets$value, f=mbaskets$Baskets)
 baskets = lapply(baskets1, unique)
 baskettrans = as(baskets, "transactions")
-summary(baskettrans)
 supportLevels <- c(0.1, 0.05, 0.01, 0.005)
 confidenceLevels <- c(0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1)
 
@@ -6941,8 +6955,8 @@ ggplot(data=num_rules, aes(x=confidenceLevels)) +
 
 ```
 
-Using the thresholds specified, I got 873 rules. This quite high, but this is the number of rules I wanted in order to find the associate rules with higher lifts. 
 
+Using the thresholds specified, I got 873 rules. This quite high, but this is the number of rules I wanted in order to find the associate rules with higher lifts. 
 ```{r message=FALSE,warning = FALSE}
 library(dplyr)
 library(arules)
@@ -6960,8 +6974,6 @@ nbaskets <- concat.split(baskets, "V1", ",")
 # baskets1= split(x=baskets_1[,-1], f=baskets$Baskets)
 
 
-
-
 mbaskets <- nbaskets[,-2]
 
 mbaskets <- melt(mbaskets, id=c("Baskets"))
@@ -6977,17 +6989,17 @@ baskettrans = as(baskets, "transactions")
 basketrules = apriori(baskettrans, 
                       parameter=list(support=.005, confidence=.2, maxlen=5))
 
-inspect(basketrules)
+#inspect(basketrules)
 plot(basketrules)
 
 ## Choose a subset
-inspect(subset(basketrules, subset=lift > 3))
-inspect(subset(basketrules, subset=confidence > 0.5))
-inspect(subset(basketrules, subset=lift > 3 & confidence > 0.55))
+#inspect(subset(basketrules, subset=lift > 3))
+#inspect(subset(basketrules, subset=confidence > 0.5))
+#inspect(subset(basketrules, subset=lift > 3 & confidence > 0.55))
 
 # plot all the rules in (support, confidence) space
 # notice that high lift rules tend to have low support
-plot(basketrules)
+#plot(basketrules)
 
 # can swap the axes and color scales
 plot(basketrules, measure = c("support", "lift"), shading = "confidence")
@@ -6996,12 +7008,11 @@ plot(basketrules, measure = c("support", "lift"), shading = "confidence")
 plot(basketrules, method='two-key plot')
 
 # can now look at subsets driven by the plot
-inspect(subset(basketrules, support > 0.01))
-inspect(subset(basketrules, confidence > 0.2))
+#inspect(subset(basketrules, support > 0.01))
+#inspect(subset(basketrules, confidence > 0.2))
 ```
 
 I then determined that I wanted only associate rules that were higher than 0.5 confidence level and around .005 support. I created a subset based on this criteria. Again, you can see that the number of rules is still high.
-
 ```{r message=FALSE,warning = FALSE}
 library(dplyr)
 library(arules)
@@ -7040,8 +7051,9 @@ summary(sub1)
 plot(sub1, method='graph')
 inspect(sub1)
 ```
-To get a better idea about the association rules, I plotted the top ten association rules based on lift in a parallel coordinate plot. The y value represents the basket item or the rule itself while the x axis is the position in the association rule. As you can see, curd seems to be what people purchase with other items. Almost all of the top 10 rules have curd as the RHS. It is also interesting that if you bought curd  and then tropical fruit. You are likely to buy whole milk. 
 
+
+To get a better idea about the association rules, I plotted the top ten association rules based on lift in a parallel coordinate plot. The y value represents the basket item or the rule itself while the x axis is the position in the association rule. As you can see, curd seems to be what people purchase with other items. Almost all of the top 10 rules have curd as the RHS. It is also interesting that if you bought curd  and then tropical fruit. You are likely to buy whole milk. 
 ```{r message=FALSE,warning = FALSE}
 
 library(dplyr)
@@ -7119,8 +7131,7 @@ plot(head(sub1, 20, by='lift'), method='graph')
 
 ```
 
-I also included grouped matrix that provided a different view of the top 20 rules. It shows very similar information as the parallel coordinate plot. I also plotted the basket items that would usually not be purchased together along with an inspection of these association rules. 
-
+I also plotted the basket items that would usually not be purchased together along with an inspection of these association rules. 
 ```{r message=FALSE,warning = FALSE}
 #lower end of the lift
 library(dplyr)
@@ -7152,19 +7163,11 @@ baskets = lapply(baskets1, unique)
 baskettrans = as(baskets, "transactions")
 basketrules = apriori(baskettrans, 
                       parameter=list(support=.005, confidence=.2, maxlen=5))
-sub1 = subset(basketrules, subset=confidence > 0.5 & support > 0.005)
-subRules2<-head(sub1, n=20, by="lift")
-subRules2 <- head(sort(basketrules, by="lift"), 10)
-plot(head(sub1, 20, by='lift'), method='graph', control=list(layout=igraph::in_circle()))
-plot(head(sub1, 20, by='lift'), method='graph')
-plot(subRules2, method = 'grouped')
 
 inspect(tail(sort(basketrules, by = "lift")))
-inspect(head(sort(basketrules, by = "lift")))
+plot(tail(sort(basketrules, by = "lift")),method='graph')
 
 ```
 
 Lastly, I plotted the larger, filtered network of basket items. 
 ![](C:/Users/machu/OneDrive/Documents/Untitled.png)
-
-
